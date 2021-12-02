@@ -3,8 +3,11 @@ package de.tekup.vue.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import de.tekup.vue.models.User;
 import de.tekup.vue.models.UserDB;
 import de.tekup.vue.models.WelcomeMsg;
 
@@ -32,6 +35,20 @@ public class IndexCtrl {
 
 	@GetMapping("/add/user")
 	public String getAddUser(Model model) {
+		model.addAttribute("user", new User());
+		return "user/add-user";
+	}
+	
+	@PostMapping("/add/user")
+	public String postAddUser(@ModelAttribute("user") User user) {
+		System.out.println(user);
+		UserDB.add(user);
+		return "redirect:/show/users";
+	}
+	
+	@GetMapping("/update/user/{id}")
+	public String updateUser(@PathVariable("id") int id,Model model) {
+		model.addAttribute("user", UserDB.get(id)); 
 		return "user/add-user";
 	}
 }
